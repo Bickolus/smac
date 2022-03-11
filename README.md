@@ -1,2 +1,2 @@
-# smac
-S.M.A.C - Social Media API Code
+# S.N.A.C - Social Network API Code
+
