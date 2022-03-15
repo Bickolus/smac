@@ -1,3 +1,4 @@
+const { redirect } = require("express/lib/response");
 const { User, Thought } = require("../models");
 
 module.exports = {
@@ -26,7 +27,7 @@ module.exports = {
         User.findOneAndUpdate({ _id: req.body.userId }, { $addToSet: { thoughts: dbThoughtData._id } }, { new: true })
           .then(dbUserData => 
               !dbUserData
-                ? res.status(404).json({ message: "No user found with this id!" })
+                ? res.status(404).json({ message: "No user found with this ID!" })
                 : res.json(dbUserData)
           )
           .catch((err) => res.status(500).json(err));
@@ -54,7 +55,32 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
+  // Add a reaction to a thought
   addReaction(req, res) {
-    
+    Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId }, 
+      { $addToSet: { reactions: { reactionBody: req.body.reactionBody, username: req.body.username} } }, 
+      { new: true, runValidators: true },
+    )
+    .then((dbThoughtData) => 
+      !dbThoughtData
+        ? res.status(404).json({ message: "No thought found with this ID!" })
+        : res.json(dbThoughtData)
+    )
+    .catch((err) => res.status(500).json(err));
+  },
+  // Delete a thought's reaction
+  deleteReaction(req, res) {
+    Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId }, 
+      { $pull: { reactions: { reactionId: req.body.reactionId} } }, 
+      { new: true, runValidators: true },
+    )
+    .then((dbThoughtData) => 
+      !dbThoughtData
+        ? res.status(404).json({ message: "No thought found with this ID!" })
+        : res.json(dbThoughtData)
+    )
+    .catch((err) => res.status(500).json(err));
   }
 };
