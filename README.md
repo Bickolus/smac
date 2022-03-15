@@ -22,11 +22,11 @@ A video walkthrough has been recorded to demonstrate its functions.
 
 ## Installation
 
-Type "npm install" in the console to install the dependancies this application requires (Express, MySQL2, Dotenv, and Sequelize). You would also need a MySQL server running to be able to create the database and seed it with items. 
+Type "npm install" in the console to install the dependancies this application requires (Express, Mongoose, dayjs).
 
 ## Usage
 
-In order to run this program, a couple things need to be done. Firstly, the user must have MongoDB installed so that the database and schema are automatically created when the user runs the application. Secondly, type "npm install" in a terminal (making sure its the directory of the repo), which would then install mongoose and express. Thirdly, type "npm start" to run the server. Your localhost:3001/api/ URL will now display objects. Use a program like Insomnia to check out GET, POST, PUT, DELETE http methods.
+In order to run this program, a couple things need to be done. Firstly, the user must have MongoDB installed so that the database and schema are automatically created when the user runs the application. Secondly, type "npm install" in a terminal (making sure its the directory of the repo), which would then install mongoose, dayjs, and express. Thirdly, type "npm start" to run the server. Your localhost:3001/api/ URL will now display objects. Use a program like Insomnia to check out GET, POST, PUT, DELETE http methods.
 
 ## Example
 
