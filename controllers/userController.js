@@ -10,11 +10,9 @@ module.exports = {
   // Get user by id
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
-      .populate([
-        { path: "thoughts", select: "-__v" },
-        { path: "friends", select: "-__v" },
-      ])
       .select("-__v")
+      .populate( "thoughts" )
+      .populate( "friends" )
       .then((user) =>
         !user
           ? res.status(404).json({ message: "No user exists with that ID!" })
@@ -22,7 +20,11 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-  // Creating a new user
+  // Creating a new user, use this as a template
+  // {
+  //   "username": "namehere",
+  //   "email": "emailhere"
+  // }
   createUser(req, res) {
     User.create(req.body)
       .then((dbUserData) => res.json(dbUserData))
@@ -47,7 +49,7 @@ module.exports = {
           : Thought.deleteMany({ username: dbUserData.username })
             .then((deletedData) =>
               deletedData
-                ? res.json(deletedData)
+                ? res.json({ message: "User and their thoughts deleted!" })
                 : res.status(404).json({ message: "User doesn't have any thoughts to delete."})
             )
       )
@@ -64,11 +66,11 @@ module.exports = {
   },
   // Delete a friend from a user's friends array
   deleteFriend(req, res) {
-    User.findOneAndDelete({ _id: req.params.userId }, { $pull: { friends: req.params.friendId } }, { new: true, runValidators: true })
+    User.findOneAndUpdate({ _id: req.params.userId }, { $pull: { friends: req.params.friendId } })
       .then((dbUserData) => 
         !dbUserData
           ? res.status(404).json({ message: "No user exists with that ID!" })
-          : res.json(dbUserData))
+          : res.json({ message: "Friend deleted from user's list!" }))
       .catch((err) => res.status(500).json(err));
   },
 };

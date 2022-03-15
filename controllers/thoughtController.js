@@ -19,7 +19,12 @@ module.exports = {
     )
     .catch((err) => res.status(500).json(err));
   },
-  // Create a thought
+  // Create a thought, use this as a template:
+  // {
+  //   "thoughtText": "content",
+  //   "username": "usernamehere",
+  //   "userId": "idOfUserHere"
+  // }
   createThought(req, res) {
     Thought.create(req.body)
       .then((dbThoughtData) => {
@@ -48,13 +53,17 @@ module.exports = {
       .then((dbThoughtData) =>
         !dbThoughtData
           ? res.status(404).json(err)
-          : User.findOneAndUpdate({ _id: dbThoughtData.username }, { $pull: { thoughts: req.params.thoughtId } })
-            .then((dbThoughtData) => res.json(dbThoughtData))
+          : User.findOneAndUpdate({ username: dbThoughtData.username }, { $pull: { thoughts: req.params.thoughtId } })
+            .then(() => res.json({ message: "Thought deleted!"} ))
             .catch((err) => res.status(500).json(err))
       )
       .catch((err) => res.status(500).json(err));
   },
-  // Add a reaction to a thought
+  // Add a reaction to a thought, use this as a template:
+  // {
+  //   "reactionBody": "text",
+  //   "username": "text"
+  // }
   addReaction(req, res) {
     Thought.findOneAndUpdate(
       { _id: req.params.thoughtId }, 
@@ -64,11 +73,16 @@ module.exports = {
     .then((dbThoughtData) => 
       !dbThoughtData
         ? res.status(404).json({ message: "No thought found with this ID!" })
-        : res.json(dbThoughtData)
+        : res.json({dbThoughtData})
     )
     .catch((err) => res.status(500).json(err));
   },
-  // Delete a thought's reaction
+  // Delete a thought's reaction, use this as a template
+  // {
+  //   "reactionBody": "text",
+  //   "username": "text",
+  //   "reactionId": "text"
+  // }
   deleteReaction(req, res) {
     Thought.findOneAndUpdate(
       { _id: req.params.thoughtId }, 
@@ -78,7 +92,7 @@ module.exports = {
     .then((dbThoughtData) => 
       !dbThoughtData
         ? res.status(404).json({ message: "No thought found with this ID!" })
-        : res.json(dbThoughtData)
+        : res.json({ message: "Reaction deleted!" })
     )
     .catch((err) => res.status(500).json(err));
   }
